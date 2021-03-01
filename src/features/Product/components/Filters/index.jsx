@@ -1,4 +1,4 @@
-import { Box, Button, makeStyles } from '@material-ui/core';
+import { Box, Button, makeStyles, Typography } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -37,6 +37,9 @@ function Filters(props) {
       justifyContent="flex-end"
       alignItems="flex-start"
     >
+      <Box mb={2}>
+        <Typography variant="h6">Product Category</Typography>
+      </Box>
       {CATEGORIES_MAP.map((category) => (
         <Box
           width="160px"

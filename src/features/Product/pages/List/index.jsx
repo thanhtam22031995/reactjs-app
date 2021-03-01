@@ -126,7 +126,7 @@ function ProductList(props) {
     <div>
       <Box height="5px">{loading && <LinearProgress />}</Box>
       <Container fixed>
-        <Box display="flex" alignItems="flex-start">
+        <Box mt={2} display="flex" alignItems="flex-start">
           <Box>
             <Filters categories={categories} filters={filters} onClick={handleCategoryClick} />
           </Box>
