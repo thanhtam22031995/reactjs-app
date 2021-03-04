@@ -1,8 +1,8 @@
 import { Box, Container } from '@material-ui/core';
+import productApi from 'api/productApi';
+import AddEditForm from 'features/Product/components/AddEditForm';
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
-import productApi from '../../../../api/productApi';
-import AddEditForm from '../../components/AddEditForm';
 
 AddEdit.propTypes = {};
 

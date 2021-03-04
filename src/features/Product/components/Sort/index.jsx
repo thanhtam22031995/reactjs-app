@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SelectField from '../../../../components/FormField/SelectField';
+
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import SelectField from 'components/FormField/SelectField';
 
 SortProduct.propTypes = {
   onSubmit: PropTypes.func,

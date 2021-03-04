@@ -70,7 +70,26 @@ const useStyles = makeStyles({
     display: 'flex',
     fontSize: 14,
   },
+  cancelBtn: {
+    color: 'white',
+    backgroundColor: '#e74c3c',
+    '&:hover': {
+      backgroundColor: '#c0392b',
+    },
+  },
+  address: {
+    color: '#7f8c8d',
+    fontSize: 14,
+  },
 });
+const CITY_MAP = {
+  hcm: 'Tp.HCM',
+  hn: 'Hà Nội',
+  tth: 'Thừa Thiên Huế',
+  dn: 'Đà Nẵng',
+  nt: 'Nha Trang',
+  dl: 'Đà Lạt',
+};
 function CartFeature(props) {
   const cartItems = useSelector(cartItemsSelector);
   const totalAmount = useSelector(totalSelector);
@@ -79,8 +98,9 @@ function CartFeature(props) {
   const classes = useStyles();
   const history = useHistory();
 
+  const contacts = useSelector((state) => state.contact.contacts);
+
   const handleIncreaseClick = (item) => {
-    console.log(item);
     const action = addToCart({
       ...item,
       quantity: 1,
@@ -108,6 +128,10 @@ function CartFeature(props) {
     if (window.confirm(message)) {
       dispatch(clearCart());
     }
+  };
+
+  const handleOnChangeAddressClick = () => {
+    history.push('/contact');
   };
 
   useEffect(() => {
@@ -220,7 +244,7 @@ function CartFeature(props) {
                 style={{ marginRight: 20 }}
                 onClick={handleRemoveAllCartClick}
                 variant="contained"
-                color="secondary"
+                className={classes.cancelBtn}
               >
                 Cancel Order
               </Button>
@@ -228,14 +252,26 @@ function CartFeature(props) {
           )}
         </Grid>
         <Grid item xs={12} md={3}>
-          <Box mt={8}>
+          <Box mt={8} mb={20}>
             <Card
               className={classes.card}
-              style={{ height: '85px', flexDirection: 'column', alignItems: 'flex-start' }}
+              style={{ flexDirection: 'column', alignItems: 'flex-start' }}
             >
               <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
                 <Typography>Receive Address</Typography>
-                <Button color="primary">Change</Button>
+                <Button onClick={handleOnChangeAddressClick} color="primary">
+                  Change
+                </Button>
+              </Box>
+              <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
+                <Typography>{contacts.name}</Typography>
+                {!!contacts.name && <Typography>|</Typography>}
+                <Typography>{contacts.phone}</Typography>
+              </Box>
+              <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
+                <Typography className={classes.address}>
+                  {contacts.address} - {CITY_MAP[contacts.city]}
+                </Typography>
               </Box>
             </Card>
             <Card
@@ -263,7 +299,7 @@ function CartFeature(props) {
             >
               <Box width="100%" display="flex" justifyContent="space-between">
                 <Typography variant="body1">Total Amount</Typography>
-                <Typography style={{ color: 'red', fontSize: 18 }}>
+                <Typography style={{ color: '#e74c3c', fontSize: 18 }}>
                   {currencyFormat(totalAmount)}
                 </Typography>
               </Box>

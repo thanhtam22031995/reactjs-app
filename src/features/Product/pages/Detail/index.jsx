@@ -8,18 +8,18 @@ import {
   Slide,
   Snackbar,
 } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import { Skeleton } from '@material-ui/lab';
+import productApi from 'api/productApi';
+import ImageSelector from 'components/ImageSelector';
+import { addToCart } from 'features/Cart/cartSlice';
+import { cartItemsSelector } from 'features/Cart/selector';
+import AddToCart from 'features/Product/components/AddCard';
+import DetailDescription from 'features/Product/components/Description';
+import DetailInfomation from 'features/Product/components/DetailInfomation';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import productApi from '../../../../api/productApi';
-import ImageSelector from '../../../../components/ImageSelector';
-import { addToCart } from '../../../Cart/cartSlice';
-import { cartItemsSelector } from '../../../Cart/selector';
-import AddToCart from '../../components/AddCard';
-import DetailDescription from '../../components/Description';
-import DetailInfomation from '../../components/DetailInfomation';
-import CloseIcon from '@material-ui/icons/Close';
 
 ProductDetail.propTypes = {};
 
@@ -119,12 +119,12 @@ function ProductDetail(props) {
         open={open}
         onClose={handleClose}
         TransitionComponent={transition}
-        message="Sản Phẩm Đã Được Thêm Vào Giỏ Hàng"
+        message="A new product has been added to cart!"
         key={transition ? transition.name : ''}
         action={
           <React.Fragment>
             <Button variant="contained" color="primary" size="small" onClick={handleMoveTocart}>
-              Go To Cart
+              Move To Cart
             </Button>
             <IconButton aria-label="close" color="inherit" onClick={handleClose}>
               <CloseIcon />

@@ -8,17 +8,17 @@ import {
   Slide,
   Snackbar,
 } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import { Skeleton } from '@material-ui/lab';
+import productApi from 'api/productApi';
+import { addToCart } from 'features/Cart/cartSlice';
+import { cartItemsSelector } from 'features/Cart/selector';
+import Filters from 'features/Product/components/Filters';
+import PagePagination from 'features/Product/components/Pagination';
+import RenderList from 'features/Product/components/RenderList';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import productApi from '../../../../api/productApi';
-import { addToCart } from '../../../Cart/cartSlice';
-import Filters from '../../components/Filters';
-import PagePagination from '../../components/Pagination';
-import RenderList from '../../components/RenderList';
-import CloseIcon from '@material-ui/icons/Close';
-import { cartItemsSelector } from '../../../Cart/selector';
 
 ProductList.propTypes = {};
 
@@ -163,11 +163,11 @@ function ProductList(props) {
           open={open}
           onClose={handleClose}
           TransitionComponent={transition}
-          message="A new product is added to cart!"
+          message="A new product has been added to cart!"
           key={transition ? transition.name : ''}
           action={
             <React.Fragment>
-              <Button color="secondary" size="small" onClick={handleMoveTocart}>
+              <Button variant="contained" color="primary" size="small" onClick={handleMoveTocart}>
                 Move To Cart
               </Button>
               <IconButton aria-label="close" color="inherit" onClick={handleClose}>

@@ -1,15 +1,15 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Typography } from '@material-ui/core';
+import CheckboxField from 'components/FormField/CheckboxField';
+import InputField from 'components/FormField/InputField';
+import OptionField from 'components/FormField/OptionField';
+import PhotoListField from 'components/FormField/PhotoListField';
+import SelectField from 'components/FormField/SelectField';
+import TextareaField from 'components/FormField/TextareaField';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import CheckboxField from '../../../../components/FormField/CheckboxField';
-import InputField from '../../../../components/FormField/InputField';
-import OptionField from '../../../../components/FormField/OptionField';
-import PhotoListField from '../../../../components/FormField/PhotoListField';
-import SelectField from '../../../../components/FormField/SelectField';
-import TextareaField from '../../../../components/FormField/TextareaField';
 
 AddEditForm.propTypes = {
   initialValues: PropTypes.object,

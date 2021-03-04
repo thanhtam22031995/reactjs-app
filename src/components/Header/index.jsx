@@ -67,6 +67,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   link: {
+    marginRight: 10,
     color: 'black',
     textDecoration: 'none',
   },
@@ -98,12 +99,21 @@ export default function Header() {
             </NavLink>
 
             <div className={classes.grow} />
+
+            <NavLink to="/" className={classes.link}>
+              <Button color="inherit">Home</Button>
+            </NavLink>
+
             <NavLink to="/products" className={classes.link}>
               <Button color="inherit">Shop</Button>
             </NavLink>
 
             <NavLink to="/products/addedit" className={classes.link}>
               <Button color="inherit">Add New</Button>
+            </NavLink>
+
+            <NavLink to="/contact" className={classes.link}>
+              <Button color="inherit">Contact</Button>
             </NavLink>
 
             <div className={classes.search}>
