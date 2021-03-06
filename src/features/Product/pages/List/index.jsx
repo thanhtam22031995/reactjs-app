@@ -16,6 +16,8 @@ import { cartItemsSelector } from 'features/Cart/selector';
 import Filters from 'features/Product/components/Filters';
 import PagePagination from 'features/Product/components/Pagination';
 import RenderList from 'features/Product/components/RenderList';
+import SortProduct from 'features/Product/components/Sort';
+import SortByPrice from 'features/Product/components/SortByPrice';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -54,11 +56,11 @@ function ProductList(props) {
   }, [filters]);
 
   useEffect(() => {
-    if (!!searchTerm.name_like) {
+    if (!!searchTerm.q) {
       setCategories('');
       setFilters((x) => ({ ...x, ...searchTerm }));
     }
-    if (!searchTerm.name_like) {
+    if (!searchTerm.q) {
       setCategories('');
       setFilters({
         _page: 1,
@@ -68,6 +70,7 @@ function ProductList(props) {
       });
     }
   }, [searchTerm]);
+
   useEffect(() => {
     localStorage.setItem('cart_item', JSON.stringify(cartItems));
   }, [cartItems]);
@@ -122,6 +125,25 @@ function ProductList(props) {
   const handleMoveTocart = () => {
     history.push('/cart');
   };
+  const handleSortFormSubmit = (values) => {
+    setFilters((x) => ({ ...x, _sort: values }));
+  };
+  const handleSortByPriceSubmit = (value) => {
+    if (value.sortPrice[1] < 10000000) {
+      setFilters((x) => ({
+        ...x,
+        salePrice_gte: value.sortPrice[0],
+        salePrice_lte: value.sortPrice[1],
+      }));
+    }
+    setFilters((x) => ({
+      ...x,
+      salePrice_gte: value.sortPrice[0],
+      salePrice_lte: 100000000,
+    }));
+  };
+
+  const sortProp = { _sort: '' };
   return (
     <div>
       <Box height="5px">{loading && <LinearProgress />}</Box>
@@ -129,7 +151,14 @@ function ProductList(props) {
         <Box mt={2} display="flex" alignItems="flex-start">
           <Box>
             <Filters categories={categories} filters={filters} onClick={handleCategoryClick} />
+            <Box mt={2} ml={-1.5}>
+              <SortProduct initialValues={sortProp} onSubmit={handleSortFormSubmit} />
+            </Box>
+            <Box mt={2} ml={-1.5}>
+              <SortByPrice defaultValues={[0, 2000000]} onSubmit={handleSortByPriceSubmit} />
+            </Box>
           </Box>
+
           {loading ? (
             <Grid spacing={2} container>
               {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => (

@@ -72,10 +72,16 @@ const useStyles = makeStyles({
     borderRadius: '5px',
     clipPath: 'polygon(0 0, 100% 0, 100% 42%, 50% 78%, 0 42%)',
   },
+  salePrice: {
+    color: '#fe4c50',
+    fontSize: '18px',
+    fontWeight: 600,
+  },
   price: {
     textDecoration: 'line-through',
     fontSize: '14px',
-    color: '#636e72',
+    color: '#fe4c50',
+    fontWeight: 400,
   },
   freeShip: {
     position: 'absolute',
@@ -142,8 +148,8 @@ function RenderList(props) {
                     justifyContent="center"
                     alignItems="center"
                   >
-                    <Box padding={1} color="red" fontWeight="bolder">
-                      <Typography>
+                    <Box padding={1}>
+                      <Typography className={classes.salePrice}>
                         {currencyFormat(!!product.salePrice ? product.salePrice : 0)}
                       </Typography>
                     </Box>

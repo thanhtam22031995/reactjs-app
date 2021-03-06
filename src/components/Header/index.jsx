@@ -83,7 +83,7 @@ export default function Header() {
       clearTimeout(typingTimeoutRef.current);
     }
     typingTimeoutRef.current = setTimeout(() => {
-      const action = addSearchTerm({ name_like: value });
+      const action = addSearchTerm({ q: value });
       dispatch(action);
     }, 500);
   };

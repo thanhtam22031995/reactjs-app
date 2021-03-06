@@ -13,10 +13,11 @@ import {
 } from '@material-ui/core';
 import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
 import CloseIcon from '@material-ui/icons/Close';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { addToCart, clearCart, removeAllFromCart } from './cartSlice';
+import Promotion from './components/Promotion';
 import { cartItemsSelector, itemsCountSelector, totalSelector } from './selector';
 
 CartFeature.propTypes = {};
@@ -81,6 +82,9 @@ const useStyles = makeStyles({
     color: '#7f8c8d',
     fontSize: 14,
   },
+  promo: {
+    fontSize: 14,
+  },
 });
 const CITY_MAP = {
   hcm: 'Tp.HCM',
@@ -90,6 +94,7 @@ const CITY_MAP = {
   nt: 'Nha Trang',
   dl: 'Đà Lạt',
 };
+const codes = ['Discount 10% And Free Ship', 'Discount 20%!'];
 function CartFeature(props) {
   const cartItems = useSelector(cartItemsSelector);
   const totalAmount = useSelector(totalSelector);
@@ -144,8 +149,21 @@ function CartFeature(props) {
     history.push('/products');
   };
 
+  const [open, setOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(codes[1]);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
+
   return (
     <Container fixed>
+      <Promotion selectedValue={selectedValue} open={open} onClose={handleClose} />
       <Grid container>
         <Grid item xs={12} md={9}>
           <Box mt={2} display="flex" justifyContent="flex-start" alignItems="flex-end">
@@ -264,13 +282,14 @@ function CartFeature(props) {
                 </Button>
               </Box>
               <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
-                <Typography>{contacts.name}</Typography>
+                <Typography>{!!contacts.name && contacts.name.toUpperCase()}</Typography>
                 {!!contacts.name && <Typography>|</Typography>}
                 <Typography>{contacts.phone}</Typography>
               </Box>
               <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
                 <Typography className={classes.address}>
-                  {contacts.address} - {CITY_MAP[contacts.city]}
+                  {!!contacts.address && contacts.address.toUpperCase()} -{' '}
+                  {CITY_MAP[contacts.city].toUpperCase()}
                 </Typography>
               </Box>
             </Card>
@@ -278,11 +297,17 @@ function CartFeature(props) {
               className={classes.card}
               style={{ height: '85px', flexDirection: 'column', alignItems: 'flex-start' }}
             >
-              <Typography>Promotion</Typography>
-              <Typography className={classes.promote}>
-                <CardGiftcardIcon />
-                Select promotion code
-              </Typography>
+              <Box width="100%" display="flex" justifyContent="space-between">
+                <Typography>Promotion</Typography>
+
+                <Typography className={classes.promo}>{selectedValue}</Typography>
+              </Box>
+              <Box onClick={handleClickOpen}>
+                <Typography className={classes.promote}>
+                  <CardGiftcardIcon />
+                  Select promotion code
+                </Typography>
+              </Box>
             </Card>
             <Card className={classes.card} style={{ height: '60px' }}>
               <Typography variant="body1">Provisional Sum</Typography>

@@ -7,7 +7,7 @@ const productSlice = createSlice({
   },
   reducers: {
     addSearchTerm(state, action) {
-      if (!!action.payload.name_like) {
+      if (!!action.payload.q) {
         state.searchTerm = { _limit: 9, ...action.payload };
       } else state.searchTerm = {};
     },
