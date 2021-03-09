@@ -1,16 +1,17 @@
 import {
   Box,
-  Button,
-  ButtonGroup,
   FormControl,
+  FormControlLabel,
   FormHelperText,
   FormLabel,
+  Radio,
+  RadioGroup,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Controller } from 'react-hook-form';
 
-OptionField.propTypes = {
+RadioField.propTypes = {
   name: PropTypes.string.isRequired,
   form: PropTypes.object.isRequired,
 
@@ -19,24 +20,21 @@ OptionField.propTypes = {
   options: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired,
+      value: PropTypes.string.isRequired,
     })
   ).isRequired,
-  onChange: PropTypes.func,
 };
 
-OptionField.defaultProps = {
+RadioField.defaultProps = {
   label: '',
   disabled: false,
-  onChange: null,
 };
 
-function OptionField(props) {
-  const { name, label, form, disabled, options } = props;
+function RadioField(props) {
+  const { name, label, form, disabled, options, onRadioChange } = props;
   const { errors } = form;
   const errorMessage = errors[name]?.message;
   const hasError = !!errorMessage;
-  const externalOnChange = props.onChange || (() => {});
 
   return (
     <Box mt={1} mb={2}>
@@ -47,23 +45,26 @@ function OptionField(props) {
           name={name}
           control={form.control}
           render={({ value, onChange, onBlur }) => (
-            <ButtonGroup color="primary" aria-label="outlined primary button group">
+            <RadioGroup
+              aria-label={name}
+              name={name}
+              value={value}
+              onChange={(e) => {
+                onChange(e.target.value);
+                onRadioChange(e.target.value);
+              }}
+              onBlur={onBlur}
+            >
               {options.map((option) => (
-                <Button
-                  type="button"
-                  variant={option.value === value ? 'contained' : 'outlined'}
-                  onClick={() => {
-                    onChange(option.value);
-                    externalOnChange(option.value);
-                  }}
+                <FormControlLabel
                   key={option.value}
+                  value={option.value}
+                  control={<Radio />}
+                  label={option.label}
                   disabled={disabled}
-                  onBlur={onBlur}
-                >
-                  {option.label}
-                </Button>
+                />
               ))}
-            </ButtonGroup>
+            </RadioGroup>
           )}
         />
 
@@ -73,4 +74,4 @@ function OptionField(props) {
   );
 }
 
-export default OptionField;
+export default RadioField;

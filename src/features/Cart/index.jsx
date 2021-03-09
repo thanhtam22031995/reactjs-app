@@ -16,9 +16,14 @@ import CloseIcon from '@material-ui/icons/Close';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { addToCart, clearCart, removeAllFromCart } from './cartSlice';
+import { addToCart, changePromotion, clearCart, removeAllFromCart } from './cartSlice';
 import Promotion from './components/Promotion';
-import { cartItemsSelector, itemsCountSelector, totalSelector } from './selector';
+import {
+  cartItemsSelector,
+  itemsCountSelector,
+  promotionSelector,
+  totalSelector,
+} from './selector';
 
 CartFeature.propTypes = {};
 
@@ -94,9 +99,15 @@ const CITY_MAP = {
   nt: 'Nha Trang',
   dl: 'Đà Lạt',
 };
-const codes = ['Discount 10% And Free Ship', 'Discount 20%!'];
+const codes = [
+  { label: 'Discount 10% and free ship', value: 10 },
+  { label: 'Discount 15% and receive a gift', value: 15 },
+  { label: 'Discount 20% and get a card', value: 20 },
+  { label: 'Discount 30% only', value: 30 },
+];
 function CartFeature(props) {
   const cartItems = useSelector(cartItemsSelector);
+  const promotion = useSelector(promotionSelector);
   const totalAmount = useSelector(totalSelector);
   const itemsCount = useSelector(itemsCountSelector);
   const dispatch = useDispatch();
@@ -143,14 +154,16 @@ function CartFeature(props) {
     localStorage.setItem('cart_item', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const handlePaymentClick = () => {};
+  const handleProceedClick = () => {
+    history.push('/payment');
+  };
 
   const handleContinueShoppingClick = () => {
     history.push('/products');
   };
 
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(codes[1]);
+  const [selectedValue, setSelectedValue] = useState(codes[0]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -159,38 +172,46 @@ function CartFeature(props) {
   const handleClose = (value) => {
     setOpen(false);
     setSelectedValue(value);
+    const action = changePromotion(value.value);
+    dispatch(action);
+  };
+  const handleOnProductClick = (item) => {
+    history.push(`/products/${item.product.id}`);
   };
 
   return (
     <Container fixed>
+      <Box mt={2} display="flex" justifyContent="flex-start" alignItems="flex-end">
+        <Typography className={classes.desc1}>Cart</Typography>
+        <Typography className={classes.desc}>({itemsCount} products)</Typography>
+      </Box>
       <Promotion selectedValue={selectedValue} open={open} onClose={handleClose} />
+      {!itemsCount && (
+        <Box mt={10} height="500px" width="100%">
+          <Box margin={2}>
+            <img src="https://salt.tikicdn.com/desktop/img/mascot@2x.png" alt="" />
+            <Typography style={{ marginTop: 20 }}>
+              There are no product in your shopping cart!
+            </Typography>
+
+            <Button
+              onClick={handleContinueShoppingClick}
+              style={{ marginTop: 20 }}
+              variant="contained"
+              color="primary"
+            >
+              Continue Shopping
+            </Button>
+          </Box>
+        </Box>
+      )}
       <Grid container>
         <Grid item xs={12} md={9}>
-          <Box mt={2} display="flex" justifyContent="flex-start" alignItems="flex-end">
-            <Typography className={classes.desc1}>Cart</Typography>
-            <Typography className={classes.desc}>({itemsCount} products)</Typography>
-          </Box>
-          {!itemsCount && (
-            <Box mt={10} height="500px" width="100%">
-              <Box margin={2}>
-                <img src="https://salt.tikicdn.com/desktop/img/mascot@2x.png" alt="" />
-                <Typography style={{ marginTop: 20 }}>There is no product in your cart!</Typography>
-
-                <Button
-                  onClick={handleContinueShoppingClick}
-                  style={{ marginTop: 20 }}
-                  variant="contained"
-                  color="primary"
-                >
-                  Continue Shopping
-                </Button>
-              </Box>
-            </Box>
-          )}
           {cartItems.map((item) => (
             <Card key={item.product.id} className={classes.root}>
               <CardActionArea className={classes.image}>
                 <CardMedia
+                  onClick={() => handleOnProductClick(item)}
                   component="img"
                   alt="Contemplative Reptile"
                   height="140"
@@ -269,78 +290,79 @@ function CartFeature(props) {
             </Box>
           )}
         </Grid>
-        <Grid item xs={12} md={3}>
-          <Box mt={8} mb={20}>
-            <Card
-              className={classes.card}
-              style={{ flexDirection: 'column', alignItems: 'flex-start' }}
-            >
-              <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
-                <Typography>Receive Address</Typography>
-                <Button onClick={handleOnChangeAddressClick} color="primary">
-                  Change
+        {!!itemsCount && (
+          <Grid item xs={12} md={3}>
+            <Box mt={2.5} mb={20}>
+              <Card
+                className={classes.card}
+                style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+              >
+                <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
+                  <Typography>Receive Address</Typography>
+                  <Button onClick={handleOnChangeAddressClick} color="primary">
+                    Change
+                  </Button>
+                </Box>
+                <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
+                  <Typography>{contacts.name}</Typography>
+                  {!!contacts.name && <Typography>|</Typography>}
+                  <Typography>{contacts.phone}</Typography>
+                </Box>
+                <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
+                  <Typography className={classes.address}>
+                    {contacts.address} - {CITY_MAP[contacts.city]}
+                  </Typography>
+                </Box>
+              </Card>
+              <Card
+                className={classes.card}
+                style={{ height: '85px', flexDirection: 'column', alignItems: 'flex-start' }}
+              >
+                <Box width="100%" display="flex" justifyContent="space-between">
+                  <Typography>Promotion</Typography>
+
+                  <Typography className={classes.promo}>{selectedValue.label}</Typography>
+                </Box>
+                <Box onClick={handleClickOpen}>
+                  <Typography className={classes.promote}>
+                    <CardGiftcardIcon />
+                    Select promotion code
+                  </Typography>
+                </Box>
+              </Card>
+              <Card className={classes.card} style={{ height: '60px' }}>
+                <Typography variant="body1">Provisional Sum</Typography>
+                <Typography>{currencyFormat(totalAmount)}</Typography>
+              </Card>
+              <Card
+                className={classes.card}
+                style={{
+                  height: '80px',
+                  marginTop: 0,
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                }}
+              >
+                <Box width="100%" display="flex" justifyContent="space-between">
+                  <Typography variant="body1">Total Amount</Typography>
+                  <Typography style={{ color: '#e74c3c', fontSize: 18 }}>
+                    {currencyFormat((totalAmount * (100 - promotion)) / 100)}
+                  </Typography>
+                </Box>
+                <Box width="100%" display="flex" justifyContent="flex-end">
+                  <Typography style={{ color: '#7f8c8d', fontSize: 12 }}>
+                    (Including VAT if any)
+                  </Typography>
+                </Box>
+              </Card>
+              <Box mt={2}>
+                <Button onClick={handleProceedClick} color="primary" variant="contained" fullWidth>
+                  proceed order
                 </Button>
               </Box>
-              <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
-                <Typography>{!!contacts.name && contacts.name.toUpperCase()}</Typography>
-                {!!contacts.name && <Typography>|</Typography>}
-                <Typography>{contacts.phone}</Typography>
-              </Box>
-              <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
-                <Typography className={classes.address}>
-                  {!!contacts.address && contacts.address.toUpperCase()} -{' '}
-                  {CITY_MAP[contacts.city].toUpperCase()}
-                </Typography>
-              </Box>
-            </Card>
-            <Card
-              className={classes.card}
-              style={{ height: '85px', flexDirection: 'column', alignItems: 'flex-start' }}
-            >
-              <Box width="100%" display="flex" justifyContent="space-between">
-                <Typography>Promotion</Typography>
-
-                <Typography className={classes.promo}>{selectedValue}</Typography>
-              </Box>
-              <Box onClick={handleClickOpen}>
-                <Typography className={classes.promote}>
-                  <CardGiftcardIcon />
-                  Select promotion code
-                </Typography>
-              </Box>
-            </Card>
-            <Card className={classes.card} style={{ height: '60px' }}>
-              <Typography variant="body1">Provisional Sum</Typography>
-              <Typography>{currencyFormat(totalAmount)}</Typography>
-            </Card>
-            <Card
-              className={classes.card}
-              style={{
-                height: '80px',
-                marginTop: 0,
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-              }}
-            >
-              <Box width="100%" display="flex" justifyContent="space-between">
-                <Typography variant="body1">Total Amount</Typography>
-                <Typography style={{ color: '#e74c3c', fontSize: 18 }}>
-                  {currencyFormat(totalAmount)}
-                </Typography>
-              </Box>
-              <Box width="100%" display="flex" justifyContent="flex-end">
-                <Typography style={{ color: '#7f8c8d', fontSize: 12 }}>
-                  (Including VAT if any)
-                </Typography>
-              </Box>
-            </Card>
-            <Box mt={2}>
-              <Button onClick={handlePaymentClick} color="primary" variant="contained" fullWidth>
-                proceed order
-              </Button>
             </Box>
-          </Box>
-        </Grid>
+          </Grid>
+        )}
       </Grid>
     </Container>
   );

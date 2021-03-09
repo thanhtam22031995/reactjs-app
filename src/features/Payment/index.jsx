@@ -1,9 +1,18 @@
+import { Container } from '@material-ui/core';
 import React from 'react';
+import PaymentForm from './component/PaymentForm';
 
-Payment.propTypes = {};
+PaymentFeature.propTypes = {};
 
-function Payment(props) {
-  return <div></div>;
+function PaymentFeature(props) {
+  const handleFormSubmit = (values) => {
+    console.log(values);
+  };
+  return (
+    <Container>
+      <PaymentForm onSubmit={handleFormSubmit} />
+    </Container>
+  );
 }
 
-export default Payment;
+export default PaymentFeature;

@@ -19,7 +19,12 @@ const useStyles = makeStyles({
   },
 });
 
-const codes = ['Discount 10% And Free Ship', 'Discount 20%!'];
+const codes = [
+  { label: 'Discount 10% and free ship', value: 10 },
+  { label: 'Discount 15% and receive a gift', value: 15 },
+  { label: 'Discount 20% and get a card', value: 20 },
+  { label: 'Discount 30% only', value: 30 },
+];
 
 function Promotion(props) {
   const { onClose, selectedValue, open } = props;
@@ -38,13 +43,13 @@ function Promotion(props) {
       <DialogTitle id="simple-dialog-title">Select Promotion Code</DialogTitle>
       <List>
         {codes.map((code) => (
-          <ListItem button onClick={() => handleListItemClick(code)} key={code}>
+          <ListItem button onClick={() => handleListItemClick(code)} key={code.label}>
             <ListItemAvatar>
               <Avatar className={classes.avatar}>
                 <CardGiftcardIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary={code} />
+            <ListItemText primary={code.label} />
           </ListItem>
         ))}
       </List>

@@ -8,7 +8,6 @@ AddEdit.propTypes = {};
 
 function AddEdit(props) {
   const { params } = useRouteMatch();
-  console.log(params);
   const [product, setProduct] = useState({
     name: '',
     shortDescription: '',
