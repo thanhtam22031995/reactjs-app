@@ -3,31 +3,34 @@ import AppBar from '@material-ui/core/AppBar';
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
 import InputBase from '@material-ui/core/InputBase';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import MoreIcon from '@material-ui/icons/MoreVert';
 import SearchIcon from '@material-ui/icons/Search';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import React, { useRef } from 'react';
+import { itemsCountSelector } from 'features/Cart/selector';
+import { addSearchTerm } from 'features/Product/productSlice';
+import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import { itemsCountSelector } from '../../features/Cart/selector';
-import { addSearchTerm } from '../../features/Product/productSlice';
+import { NavLink, useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
+    alignItems: 'center',
+    height: 70,
   },
   menuButton: {
     marginRight: theme.spacing(2),
   },
   title: {
-    fontSize: 26,
-    textDecoration: 'none',
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
-    cursor: 'pointer',
   },
   search: {
     position: 'relative',
@@ -66,16 +69,48 @@ const useStyles = makeStyles((theme) => ({
       width: '20ch',
     },
   },
+  sectionDesktop: {
+    display: 'none',
+
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+  },
+  sectionMobile: {
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+  },
   link: {
-    marginRight: 10,
+    height: 70,
+    width: 140,
+    color: 'black',
+    textDecoration: 'none',
+    [theme.breakpoints.up('md')]: {
+      height: 35,
+      marginRight: 10,
+      width: 100,
+    },
+  },
+  iconMobile: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  iconDes: {
     color: 'black',
     textDecoration: 'none',
   },
 }));
 
-export default function Header() {
+export default function PrimarySearchAppBar() {
   const classes = useStyles();
+  const history = useHistory();
+
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const typingTimeoutRef = useRef(null);
+  const itemsCount = useSelector(itemsCountSelector);
   const dispatch = useDispatch();
 
   const handleOnChangeSearch = (value) => {
@@ -88,34 +123,85 @@ export default function Header() {
     }, 500);
   };
 
-  const itemsCount = useSelector(itemsCountSelector);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
+  };
+
+  const handleMobileMenuOpen = (event) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem
+        onClick={() => {
+          history.push('/cart');
+        }}
+        className={classes.iconMobile}
+      >
+        <p>Cart</p>
+        <Badge badgeContent={itemsCount} color="secondary">
+          <ShoppingCartIcon />
+        </Badge>
+      </MenuItem>
+      <MenuItem
+        className={classes.link}
+        onClick={() => {
+          history.push('/');
+        }}
+      >
+        Home
+      </MenuItem>
+      <MenuItem
+        className={classes.link}
+        onClick={() => {
+          history.push('/products');
+        }}
+      >
+        Shop
+      </MenuItem>
+      <MenuItem
+        className={classes.link}
+        onClick={() => {
+          history.push('/products/addedit');
+        }}
+      >
+        Add New
+      </MenuItem>
+      <MenuItem
+        className={classes.link}
+        onClick={() => {
+          history.push('/contact');
+        }}
+      >
+        Contact
+      </MenuItem>
+    </Menu>
+  );
+
   return (
     <div className={classes.grow}>
       <AppBar color="inherit" position="static">
         <Container>
           <Toolbar>
-            <NavLink to="/" className={classes.title}>
-              NORDIC <span style={{ color: 'red' }}>CODER</span>
+            <NavLink to="/" style={{ textDecoration: 'none', color: 'black' }}>
+              <Typography className={classes.title} variant="h6" noWrap>
+                Nordic Shop
+              </Typography>
             </NavLink>
 
             <div className={classes.grow} />
-
-            <NavLink to="/" className={classes.link}>
-              <Button color="inherit">Home</Button>
-            </NavLink>
-
-            <NavLink to="/products" className={classes.link}>
-              <Button color="inherit">Shop</Button>
-            </NavLink>
-
-            <NavLink to="/products/addedit" className={classes.link}>
-              <Button color="inherit">Add New</Button>
-            </NavLink>
-
-            <NavLink to="/contact" className={classes.link}>
-              <Button color="inherit">Contact</Button>
-            </NavLink>
-
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -130,16 +216,45 @@ export default function Header() {
                 inputProps={{ 'aria-label': 'search' }}
               />
             </div>
-            <NavLink to="/cart" className={classes.link}>
-              <IconButton aria-label="show 4 new mails" color="inherit">
-                <Badge badgeContent={itemsCount} color="secondary">
-                  <ShoppingCartIcon />
-                </Badge>
+            <div className={classes.sectionDesktop}>
+              <NavLink to="/" className={classes.link}>
+                <Button color="inherit">Home</Button>
+              </NavLink>
+
+              <NavLink to="/products" className={classes.link}>
+                <Button color="inherit">Shop</Button>
+              </NavLink>
+
+              <NavLink to="/products/addedit" className={classes.link}>
+                <Button color="inherit">Add New</Button>
+              </NavLink>
+
+              <NavLink to="/contact" className={classes.link}>
+                <Button color="inherit">Contact</Button>
+              </NavLink>
+              <NavLink to="/cart" className={classes.iconDes}>
+                <IconButton aria-label="show 4 new mails" color="inherit">
+                  <Badge badgeContent={itemsCount} color="secondary">
+                    <ShoppingCartIcon />
+                  </Badge>
+                </IconButton>
+              </NavLink>
+            </div>
+            <div className={classes.sectionMobile}>
+              <IconButton
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+              >
+                <MoreIcon />
               </IconButton>
-            </NavLink>
+            </div>
           </Toolbar>
         </Container>
       </AppBar>
+      {renderMobileMenu}
     </div>
   );
 }

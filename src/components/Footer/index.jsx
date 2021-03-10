@@ -8,6 +8,7 @@ import PinterestIcon from '@material-ui/icons/Pinterest';
 import ReplayRoundedIcon from '@material-ui/icons/ReplayRounded';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import React from 'react';
+import WatchLaterIcon from '@material-ui/icons/WatchLater';
 import { NavLink } from 'react-router-dom';
 
 Footer.propTypes = {};
@@ -18,11 +19,24 @@ const useStyle = makeStyles({
     height: 100,
     alignItems: 'center',
     padding: 15,
+    transition: 'all 0.35s',
+    overflow: 'hidden',
+    '&:hover': {
+      marginTop: -5,
+      borderRadius: 5,
+      backgroundColor: '#bdc3c7',
+      boxShadow: '0 24px 36px rgba(0,0,0,0.11)',
+    },
+    '&:hover $icon': {
+      color: '#ED4C67',
+      transform: 'scale(1.2)',
+    },
   },
   icon: {
     color: '#e74c3c',
     fontSize: 36,
     marginRight: 10,
+    transition: 'all 0.35s',
   },
   desc: {
     display: 'flex',
@@ -101,7 +115,7 @@ function Footer(props) {
           </Grid>
           <Grid item xs={12} md={3}>
             <Box className={classes.card}>
-              <LocalShippingIcon className={classes.icon} />
+              <WatchLaterIcon className={classes.icon} />
               <Box className={classes.desc}>
                 <Typography className={classes.title}>OPENING ALL WEEK</Typography>
                 <Typography className={classes.subTitle}>08AM - 09PM</Typography>

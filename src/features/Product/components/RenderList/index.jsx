@@ -36,6 +36,9 @@ const useStyles = makeStyles({
   root: {
     maxWidth: '100%',
     position: 'relative',
+    '&:hover': {
+      boxShadow: '0 24px 36px rgba(0,0,0,0.11)',
+    },
     '&:hover $addToCart': {
       opacity: 1,
     },

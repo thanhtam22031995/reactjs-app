@@ -38,6 +38,7 @@ function ProductList(props) {
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState('');
   const [pagination, setPagination] = useState({});
+
   const dispatch = useDispatch();
 
   useEffect(() => {
