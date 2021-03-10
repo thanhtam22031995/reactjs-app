@@ -79,14 +79,17 @@ const useStyles = makeStyles((theme) => ({
   },
   sectionMobile: {
     display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
   },
   link: {
-    height: 70,
+    height: 60,
     width: 140,
     color: 'black',
+    justifyContent: 'center',
     textDecoration: 'none',
     [theme.breakpoints.up('md')]: {
       height: 35,
@@ -96,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
   },
   iconMobile: {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
   iconDes: {
     color: 'black',
