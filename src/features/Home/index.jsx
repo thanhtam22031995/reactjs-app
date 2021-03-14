@@ -1,6 +1,7 @@
 import { Box, Button, Container, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import CategoryCard from './components/CategoryCard';
 
 HomeFeature.propTypes = {};
 const useStyle = makeStyles({
@@ -58,6 +59,7 @@ function HomeFeature(props) {
           </Box>
         </Container>
       </Box>
+      <CategoryCard onClick={handleOnShopClick} />
     </div>
   );
 }

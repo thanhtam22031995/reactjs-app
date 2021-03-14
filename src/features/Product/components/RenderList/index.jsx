@@ -36,6 +36,7 @@ const useStyles = makeStyles({
   root: {
     maxWidth: '100%',
     position: 'relative',
+
     '&:hover': {
       boxShadow: '0 24px 36px rgba(0,0,0,0.11)',
     },
@@ -45,6 +46,7 @@ const useStyles = makeStyles({
   },
 
   addToCart: {
+    alignSelf: 'end',
     opacity: 0,
     backgroundColor: '#e74c3c',
     color: 'white',
@@ -52,8 +54,9 @@ const useStyles = makeStyles({
   },
 
   media: {
-    height: 340,
+    height: 200,
   },
+  gridContainer: { display: 'flex', alignItems: 'stretch' },
   grid: {
     padding: 10,
   },
@@ -115,9 +118,9 @@ function RenderList(props) {
 
   return (
     <Box display="flex" flexWrap="wrap" width="100%">
-      <Grid container width="100%">
+      <Grid container width="100%" className={classes.gridContainer}>
         {productList.map((product) => (
-          <Grid key={product.id} item sm={12} md={6} lg={4} className={classes.grid}>
+          <Grid key={product.id} item xs={12} sm={12} md={4} lg={3} className={classes.grid}>
             <Box width="100%">
               <Card
                 onClick={() => {
@@ -139,13 +142,12 @@ function RenderList(props) {
                     title={product.name}
                   />
                   <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
+                    <Typography gutterBottom variant="body1" component="h2">
                       {product.name}
                     </Typography>
                   </CardContent>
                   <Box
                     mt={-3}
-                    mb={1}
                     paddingBottom={1}
                     display="flex"
                     justifyContent="center"

@@ -31,7 +31,7 @@ function ProductList(props) {
   const searchTerm = useSelector((state) => state.product.searchTerm);
   const [filters, setFilters] = useState({
     _page: 1,
-    _limit: 9,
+    _limit: 12,
     _sort: 'updatedAt',
     _order: 'desc',
   });
@@ -65,7 +65,7 @@ function ProductList(props) {
       setCategories('');
       setFilters({
         _page: 1,
-        _limit: 9,
+        _limit: 12,
         _sort: 'updatedAt',
         _order: 'desc',
       });
@@ -162,9 +162,9 @@ function ProductList(props) {
 
           {loading ? (
             <Grid spacing={2} container>
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => (
-                <Grid item key={number} style={{ marginTop: 10, marginLeft: 10 }}>
-                  <Skeleton variant="rect" width={335} height={358} />
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((number) => (
+                <Grid item xs={12} sm={12} md={4} lg={3} key={number}>
+                  <Skeleton variant="rect" height={275} />
                   <Box pt={0.5}>
                     <Skeleton width="70%" />
                     <Skeleton width="20%" />
